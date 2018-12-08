@@ -93,7 +93,7 @@ begin
             .Get();    
 end;    
 ```
-O OtsFirebase irá autenticar e na mesma chamada vai retornar o JSONObject da sua solicitação, desta forma vc tem 
+O OtsFirebase irá autenticar e na mesma chamada vai retornar o JSONObject da sua solicitação, desta forma você tem 
 todo o controle das informações;
 
 
