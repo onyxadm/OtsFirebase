@@ -28,6 +28,8 @@ type
     bCreateUser: TButton;
     bLogout: TButton;
     OtsFirebase: TOtsFirebase;
+    noAuth: TCheckBox;
+    edtNode2: TEdit;
     procedure bCreateUserClick(Sender: TObject);
     procedure bLoginUserClick(Sender: TObject);
     procedure bLogoutClick(Sender: TObject);
@@ -141,18 +143,31 @@ begin
 
   memoResp.Text := '';
 
-  OtsFirebase.API(edtApiKey.Text, edtProjectId.Text);
-
-  with OtsFirebase //.API(edtApiKey.Text, edtProjectId.Text)
-          .Auth(edtEmail.Text, edtPassword.Text)
-          .Database
-          .Resource([edtNode.Text])
-          .Get()
-  do
+  if noAuth.Checked then
   begin
 
-    memoResp.Text := ToJSON;
+    //Consumindo um projeto Firebase sem autenticação, projeto com regras de segurança aberta
 
+    memoResp.Text := OtsFirebase
+                        .API(edtProjectId.Text)
+                        .Database
+                        .Resource([edtNode.Text, edtNode2.Text])
+                        .Get()
+                        .ToJSON;
+
+  end else
+  begin
+
+    //Autenticando e consumindo um Firebase
+
+    OtsFirebase.API(edtApiKey.Text, edtProjectId.Text);
+
+    memoResp.Text := OtsFirebase //.API(edtApiKey.Text, edtProjectId.Text)
+                        .Auth(edtEmail.Text, edtPassword.Text)
+                        .Database
+                        .Resource([edtNode.Text, edtNode2.Text])
+                        .Get()
+                        .ToJSON;
   end;
 
   Time2 := Now - Time1;

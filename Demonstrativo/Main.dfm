@@ -149,6 +149,7 @@ object frmMain: TfrmMain
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 5
+    Text = 'AIzaSyC2ofTLxZoA9HyXPWLV6Oub02LW0mRdTjs'
   end
   object edtProjectId: TEdit
     Left = 8
@@ -162,11 +163,12 @@ object frmMain: TfrmMain
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 6
+    Text = 'auth-onyx'
   end
   object edtNode: TEdit
     Left = 8
     Top = 105
-    Width = 450
+    Width = 201
     Height = 27
     Font.Charset = DEFAULT_CHARSET
     Font.Color = 10878976
@@ -175,9 +177,10 @@ object frmMain: TfrmMain
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 7
+    Text = 'Vendas'
   end
   object bGetDocument: TButton
-    Left = 464
+    Left = 613
     Top = 106
     Width = 143
     Height = 25
@@ -203,8 +206,29 @@ object frmMain: TfrmMain
     TabOrder = 10
     OnClick = bLogoutClick
   end
+  object noAuth: TCheckBox
+    Left = 464
+    Top = 110
+    Width = 143
+    Height = 17
+    Caption = 'Consumir sem autenticar'
+    TabOrder = 11
+  end
+  object edtNode2: TEdit
+    Left = 215
+    Top = 105
+    Width = 243
+    Height = 27
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = 10878976
+    Font.Height = -16
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 12
+  end
   object OtsFirebase: TOtsFirebase
-    Left = 616
-    Top = 144
+    Left = 688
+    Top = 104
   end
 end
