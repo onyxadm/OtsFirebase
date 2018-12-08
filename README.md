@@ -17,7 +17,6 @@ que suas informações fiquem vulneráveis a algum tipo de "pessoa curiosa" e vo
 ## Forma de uso :: 
 ### Partindo da premissa que seu projeto firebase já esta criado no Console Firebase. 
 
-*********************************************************************************************************
    Caso queira controlar usuários que terão acesso ao seu projeto firebase através de usuário e senha, 
    será necessário definir as regras de segurança do banco de dados como no exemplo abaixo;
 *********************************************************************************************************
@@ -136,12 +135,13 @@ begin
   Obj := OtsFirebase.API(MEU_PROJECT_ID)  	
             .Database
             .Resource([node_do_documento]) 
-			.AutoIncremento() 
+	    .AutoIncremento() 
             .Post(JSONValue);  																	
 end;    
 ```
 Desta forma o retorno em JSONObject irá conter o padrão Google de ID's, para utilizar um ID personalizado 
 por você mesmo, basta não incluir o **.AutoIncremento()**. 
+
 **OBS: O cuidado deve ser redobrado caso decida não utilizar o AutoIncremento** [VIDE LICENÇA DO **OtsFirebase**]; 
 
 ### Outras chamadas dentro das classes para consumo da api pelo **OtsFirebase** ::
@@ -161,10 +161,11 @@ por exemplo:
 
 
 
+*********************************************************************************************************
 
     EM BREVE MAIS DETALHES DE USO...
     
-
+*********************************************************************************************************
 
 
 
