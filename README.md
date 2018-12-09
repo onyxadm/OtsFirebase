@@ -17,7 +17,6 @@ que suas informações fiquem vulneráveis a algum tipo de "pessoa curiosa" e vo
 ## Forma de uso :: 
 ### Partindo da premissa que seu projeto firebase já esta criado no Console Firebase. 
 
-*********************************************************************************************************
    Caso queira controlar usuários que terão acesso ao seu projeto firebase através de usuário e senha, 
    será necessário definir as regras de segurança do banco de dados como no exemplo abaixo;
 *********************************************************************************************************
@@ -99,8 +98,8 @@ begin
             .Auth(meu.email@dominio.com, minha_senha)
             .Database
             .Resource([node_do_documento])  //Ex.: 	Vendas/Itens então ficaria assim: 
-            .Get();    						// 		**.Resource(['Vendas', 'Itens'])** ou 
-											// 		**.Resource(['Vendas/Itens'])**
+            .Get();    			    // 		**.Resource(['Vendas', 'Itens'])** ou 
+					    // 		**.Resource(['Vendas/Itens'])**
 end;    
 ```
 O **OtsFirebase** irá autenticar e na mesma chamada vai retornar o JSONObject da sua solicitação, desta forma você tem 
@@ -116,11 +115,11 @@ procedure TfrmMain.btnGetDocumentClick(Sender: TObject);
 var
   Obj: TJSONObject;
 begin
-  Obj := OtsFirebase.API(MEU_PROJECT_ID)  	//Neste caso, a chamada **OtsFirebase.API(MEU_PROJECT_ID)** se torna obrigatória
+  Obj := OtsFirebase.API(MEU_PROJECT_ID)    //Neste caso, a chamada **OtsFirebase.API(MEU_PROJECT_ID)** se torna obrigatória
             .Database
             .Resource([node_do_documento])  //Ex.: 	Vendas/Itens então ficaria assim: 
-            .Get();    						// 		**.Resource(['Vendas', 'Itens'])** ou 
-											// 		**.Resource(['Vendas/Itens'])**
+            .Get();    			    // 		**.Resource(['Vendas', 'Itens'])** ou 
+					    // 		**.Resource(['Vendas/Itens'])**
 end;    
 ```
 
@@ -136,12 +135,13 @@ begin
   Obj := OtsFirebase.API(MEU_PROJECT_ID)  	
             .Database
             .Resource([node_do_documento]) 
-			.AutoIncremento() 
+	    .AutoIncremento() 
             .Post(JSONValue);  																	
 end;    
 ```
 Desta forma o retorno em JSONObject irá conter o padrão Google de ID's, para utilizar um ID personalizado 
-por você mesmo, basta não incluir o **.AutoIncremento()**.
+por você mesmo, basta não incluir o **.AutoIncremento()**. 
+
 **OBS: O cuidado deve ser redobrado caso decida não utilizar o AutoIncremento** [VIDE LICENÇA DO **OtsFirebase**]; 
 
 ### Outras chamadas dentro das classes para consumo da api pelo **OtsFirebase** ::
@@ -150,21 +150,22 @@ sem sair da linha padrão desejada após o **.Database.Resource([node_do_documen
 por exemplo:
 - **ContentType** 
 - **AcceptType** 
-- **QueryParams** 	 (Que são chamadas acrescentadas como parâmetro na url)
+- **QueryParams**    (Que são chamadas acrescentadas como parâmetro na url)
 - **Header's** 
 - **Token**
 - **AutoIncremento** (Usado para definir se vai usar o padrão do Google nos root's dos documentos) 
-- **OrderByKey** 	 (Este é usado por último nas chamadas) 
+- **OrderByKey**     (Este é usado por último nas chamadas) 
 
 
 
 
 
 
+*********************************************************************************************************
 
     EM BREVE MAIS DETALHES DE USO...
     
-
+*********************************************************************************************************
 
 
 
