@@ -1,0 +1,279 @@
+object Form2: TForm2
+  Left = 0
+  Top = 0
+  Caption = 'API Pessoa - Firebase Demo Mobile'
+  ClientHeight = 565
+  ClientWidth = 649
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 0
+  object Layout1: TLayout
+    Align = Top
+    Margins.Top = 5.000000000000000000
+    Margins.Bottom = 5.000000000000000000
+    Position.Y = 5.000000000000000000
+    Size.Width = 649.000000000000000000
+    Size.Height = 51.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    object edtEmail: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Client
+      TabOrder = 0
+      TextSettings.Font.Family = 'Verdana'
+      TextSettings.Font.Size = 14.000000000000000000
+      TextSettings.FontColor = claBlue
+      Margins.Left = 10.000000000000000000
+      Margins.Right = 2.000000000000000000
+      Margins.Bottom = 2.000000000000000000
+      Size.Width = 527.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      StyledSettings = []
+    end
+    object Label1: TLabel
+      Align = Top
+      Margins.Left = 10.000000000000000000
+      Position.X = 10.000000000000000000
+      Size.Width = 639.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Usu'#225'rio'
+    end
+    object bCreateUser: TButton
+      Align = Right
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 2.000000000000000000
+      Position.X = 539.000000000000000000
+      Position.Y = 17.000000000000000000
+      Size.Width = 100.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      Text = 'CreateUser'
+      OnClick = bCreateUserClick
+    end
+  end
+  object Layout2: TLayout
+    Align = Top
+    Margins.Bottom = 3.000000000000000000
+    Position.Y = 117.000000000000000000
+    Size.Width = 649.000000000000000000
+    Size.Height = 51.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    object edtNode: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Client
+      TabOrder = 0
+      KeyboardType = PhonePad
+      Text = 'Vendas'
+      TextSettings.Font.Family = 'Verdana'
+      TextSettings.Font.Size = 14.000000000000000000
+      TextSettings.FontColor = claBlue
+      Margins.Left = 10.000000000000000000
+      Margins.Right = 2.000000000000000000
+      Margins.Bottom = 2.000000000000000000
+      Size.Width = 361.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      StyledSettings = []
+    end
+    object Label2: TLabel
+      Align = Top
+      Margins.Left = 10.000000000000000000
+      Position.X = 10.000000000000000000
+      Size.Width = 639.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Node'
+    end
+    object bGetDocument: TButton
+      Align = Right
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 2.000000000000000000
+      Position.X = 539.000000000000000000
+      Position.Y = 17.000000000000000000
+      Size.Width = 100.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'GetDocument'
+      OnClick = bGetDocumentClick
+    end
+    object noAuth: TCheckBox
+      Align = Right
+      Position.X = 373.000000000000000000
+      Position.Y = 17.000000000000000000
+      Size.Width = 166.000000000000000000
+      Size.Height = 34.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Text = 'Consumir sem autenticar'
+    end
+  end
+  object Layout3: TLayout
+    Align = Top
+    Margins.Bottom = 5.000000000000000000
+    Position.Y = 171.000000000000000000
+    Size.Width = 649.000000000000000000
+    Size.Height = 51.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    object edtProjectId: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Left
+      TabOrder = 1
+      Text = 'auth-onyx'
+      TextSettings.Font.Family = 'Verdana'
+      TextSettings.Font.Size = 14.000000000000000000
+      TextSettings.FontColor = claBlue
+      Position.X = 10.000000000000000000
+      Position.Y = 17.000000000000000000
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 17.000000000000000000
+      Margins.Right = 3.000000000000000000
+      Margins.Bottom = 2.000000000000000000
+      Size.Width = 191.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      StyledSettings = []
+    end
+    object Label3: TLabel
+      AutoSize = True
+      Margins.Left = 10.000000000000000000
+      Position.X = 10.000000000000000000
+      Size.Width = 95.000000000000000000
+      Size.Height = 16.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Project ID'
+    end
+    object edtApiKey: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Client
+      TabOrder = 0
+      Text = 'AIzaSyC2ofTLxZoA9HyXPWLV6Oub02LW0mRdTjs'
+      TextSettings.Font.Family = 'Verdana'
+      TextSettings.Font.Size = 13.000000000000000000
+      TextSettings.FontColor = claBlue
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 17.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 2.000000000000000000
+      Size.Width = 430.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      StyledSettings = []
+    end
+    object Label6: TLabel
+      AutoSize = True
+      Margins.Left = 10.000000000000000000
+      Position.X = 210.000000000000000000
+      Size.Width = 95.000000000000000000
+      Size.Height = 16.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'API Key'
+      TabOrder = 2
+    end
+  end
+  object Layout5: TLayout
+    Align = Top
+    Margins.Bottom = 5.000000000000000000
+    Position.Y = 61.000000000000000000
+    Size.Width = 649.000000000000000000
+    Size.Height = 51.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object edtPassword: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Client
+      TabOrder = 0
+      Password = True
+      TextSettings.Font.Family = 'Tahoma'
+      TextSettings.FontColor = claBlue
+      Margins.Left = 10.000000000000000000
+      Margins.Right = 2.000000000000000000
+      Margins.Bottom = 2.000000000000000000
+      Size.Width = 417.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      StyledSettings = []
+    end
+    object Label5: TLabel
+      Align = Top
+      Margins.Left = 10.000000000000000000
+      Position.X = 10.000000000000000000
+      Size.Width = 639.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Senha'
+    end
+    object bLoginUser: TButton
+      Align = Right
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 2.000000000000000000
+      Position.X = 429.000000000000000000
+      Position.Y = 17.000000000000000000
+      Size.Width = 100.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Text = 'LoginUser'
+      OnClick = bLoginUserClick
+    end
+    object bLogout: TButton
+      Align = Right
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 2.000000000000000000
+      Position.X = 539.000000000000000000
+      Position.Y = 17.000000000000000000
+      Size.Width = 100.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'Logout'
+      OnClick = bLogoutClick
+    end
+  end
+  object Layout6: TLayout
+    Align = Client
+    Size.Width = 649.000000000000000000
+    Size.Height = 319.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 4
+    object memoResp: TMemo
+      Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+      DataDetectorTypes = []
+      StyledSettings = [Style, FontColor]
+      TextSettings.Font.Family = 'Verdana'
+      TextSettings.Font.Size = 14.000000000000000000
+      TextSettings.WordWrap = True
+      Align = Client
+      Size.Width = 649.000000000000000000
+      Size.Height = 319.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Viewport.Width = 645.000000000000000000
+      Viewport.Height = 315.000000000000000000
+    end
+  end
+  object lbResp: TLabel
+    Align = Top
+    StyledSettings = [Family, Size]
+    Margins.Left = 10.000000000000000000
+    Margins.Bottom = 2.000000000000000000
+    Position.X = 10.000000000000000000
+    Position.Y = 227.000000000000000000
+    Size.Width = 639.000000000000000000
+    Size.Height = 17.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.Font.StyleExt = {00070000000000000004000000}
+    TextSettings.FontColor = claBlue
+    Text = 'Resposta: '
+  end
+  object OtsFirebase: TOtsFirebase
+    Left = 40
+    Top = 336
+  end
+end
