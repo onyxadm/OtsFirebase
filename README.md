@@ -102,7 +102,7 @@ por exemplo:
 
 ```pascal
     OtsFirebase.API(MINHA_API_KEY, MEU_PROJECT_ID)
-        .Auth(meu.email@dominio.com, minha_senha)
+        .Auth(email@email.com, minha_senha)
         .ToJSONObject.ToString;
 ```    
 Pronto, assim o **OtsFirebase** já tem as credenciais necessárias para fazer qualquer chamada à api. 
@@ -135,8 +135,8 @@ procedure TfrmMain.btnGetDocumentClick(Sender: TObject);
 var
   Obj: TJSONObject;
 begin
-  Obj := OtsFirebase.API(MEU_PROJECT_ID)    //Neste caso, a chamada **OtsFirebase.API(MEU_PROJECT_ID)** se torna obrigatória
-            .Database
+  Obj := OtsFirebase.API(MEU_PROJECT_ID) 
+            .Database 
             .Resource([node_do_documento])  //Ex.: 	Vendas/Itens então ficaria assim: 
             .Get();    			    // 		**.Resource(['Vendas', 'Itens'])** ou 
 					    // 		**.Resource(['Vendas/Itens'])**
