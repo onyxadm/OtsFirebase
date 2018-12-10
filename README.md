@@ -89,7 +89,7 @@ por exemplo:
 
 ```pascal
     OtsFirebase.API(MINHA_API_KEY, MEU_PROJECT_ID)
-        .Auth(meu.email@dominio.com, minha_senha, TRUE)
+        .Auth(email@email.com, minha_senha, TRUE)
         .ToJSONObject.ToString;
 ```
 O **TRUE** no terceiro parâmetro da autenticação informa ao **OtsFirebase** para criar o usuário informado;
@@ -114,8 +114,8 @@ procedure TfrmMain.btnGetDocumentClick(Sender: TObject);
 var
   Obj: TJSONObject;
 begin
-  Obj := OtsFirebase.API(MINHA_API_KEY, MEU_PROJECT_ID)  //Ou apenas OtsFirebase.Auth(meu.email@dominio.com, minha_senha)...
-            .Auth(meu.email@dominio.com, minha_senha)
+  Obj := OtsFirebase.API(MINHA_API_KEY, MEU_PROJECT_ID)  //Ou apenas OtsFirebase.Auth(email@email.com, minha_senha)
+            .Auth(email@email.com, minha_senha)
             .Database
             .Resource([node_do_documento])  //Ex.: 	Vendas/Itens então ficaria assim: 
             .Get();    			    // 		**.Resource(['Vendas', 'Itens'])** ou 
@@ -152,11 +152,11 @@ procedure TfrmMain.btnGetDocumentClick(Sender: TObject);
 var
   Obj: TJSONObject;
 begin
-  Obj := OtsFirebase.API(MEU_PROJECT_ID)  	
-            .Database
+  Obj := OtsFirebase.API(MEU_PROJECT_ID) 
+            .Database 
             .Resource([node_do_documento]) 
 	    .AutoIncremento() 
-            .Post(JSONValue);  																	
+            .Post(JSONValue); 
 end;    
 ```
 Desta forma o retorno em JSONObject irá conter o padrão Google de ID's, para utilizar um ID personalizado 
