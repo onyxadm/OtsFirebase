@@ -4,22 +4,37 @@ Componente Delphi de Consumo do Google Firebase
 # ONYX Tecnologia em Softwares
 http://www.onyxsistemas.com
 
-## Chamada à api rest do Google Firebase: [Get, Post, Put, Patch, Delete]
+## Chamada a api rest: [Get, Post, Put, Patch, Delete]
 
 ### Componente sem propriedades? Como assim? "#"
 Isso mesmo. Se você já instalou o **OtsFirebase** no seu Delphi, você deve ter notado que o componente não 
 possui propriedades publicadas visíveis ao Object Inspector, foi desenvolvido dessa forma para evitar 
 que suas informações fiquem vulneráveis a algum tipo de "pessoa curiosa" e você deve informá-las em tempo de execução.
 
+### Mais o OtsFirebase serve apenas para consumo do próprio Firebase?
+**Não**, o **OtsFirebase** pode consumir qualquer webservices, veja o quanto é fácil: 
+```pascal
+    OtsFirebase.Request(MINHA_URL).Get();
+```
+Ainda é possível passar token, parâmetros, header's, etc.
+```pascal
+    OtsFirebase.Request(MINHA_URL, MEU_TOKEN).Resource([PARAMS]).Header(HEADER_NAME, HERADER_VALUE).Get();
+```
+*Fácil não?*
+
 ### Se não tem propriedades visíveis ao Object Inspector, posso criá-lo em Run-Time?
 **Sim**, pode trabalhar normalmente como achar melhor. Para ajudá-lo nisso, foi criado o arquivo 
-**OtsFirebase.Integration.pas**, desta forma siga os seguintes passos: 
+**OtsFirebase.Integration.pas**, para isso siga os seguintes passos: 
 1. Instale o **OtsFirebase** no seu Delphi;
 2. Adicione o **OtsFirebase.Integration.pas** ao seu projeto **Vcl/Fmx**; 
 3. Pronto! Agora basta você utilizar a chamada da instância **Firebase()...** sem se preocupar com a criação do mesmo;
+Desta forma é mantida apenas uma instância, e caso use para fim de consumo ao Firebase, não fica sendo necessário, 
+realizar a autenticação em todas as requisições, pois o token **JWT** do primeiro acesso ainda pode 
+ser válido, e por lógica a primeira requisição (*onde acontece a autenticação*) é sempre mais demorada que as outras. 
 
 ## Forma de uso :: 
 ### Partindo da premissa que seu projeto firebase já esta criado no Console Firebase. 
+https://console.firebase.google.com/
 
    Caso queira controlar usuários que terão acesso ao seu projeto firebase através de usuário e senha, 
    será necessário definir as regras de segurança do banco de dados como no exemplo abaixo;
@@ -44,8 +59,8 @@ caso contrário basta manté-lo com regras públicas
 *********************************************************************************************************
 
 Acesse as configurações do seu projeto no Console Firebase e obtenha os seguintes dados:
-1. **Código do Projeto** (geralmente é o nome do seu projeto);
-2. **Chave de API da Web** (Ex.: AIzaSyC2ofTLxZoA9HvXPWJV6Oub02LW0mRdTjr)
+1. **Código do Projeto** (*geralmente é o nome do seu projeto*);
+2. **Chave de API da Web** (Ex.: *AIzaSyC2ofTLxZoA9HvXPWJV6Oub02LW0mRdTjr*)
 
 ### Informando os dados do projeto firebase no **OtsFirebase** ::
 Existem duas formas de informar os dados do projeto ao **OtsFirebase**, são elas: 
@@ -80,7 +95,7 @@ O **TRUE** no terceiro parâmetro da autenticação informa ao **OtsFirebase** p
 
 ### Autenticando um usuário para acesso ao consumo do projeto Firebase ::
 Para autenticar um usuário previamente cadastrado, basta realizar a mesma chamada de criação de usuários sem 
-o terceiro parâmetro **TRUE** (que é opcional na chamada), ou defina como **FALSE**, como desejar, assim ele 
+o terceiro parâmetro **TRUE** (*que é opcional na chamada*), ou defina como **FALSE**, como desejar, assim ele 
 não irá criar um usuário, irá apenas autenticar-se,
 por exemplo:
 
@@ -111,7 +126,7 @@ todo o controle das informações;
 
 ### Autenticando como **anonymous** no Firebase sem regras de segurança definidas ::
 A fim de facilitar o uso do **OtsFirebase**, é possível trabalhar de forma anônima, necessitando apenas do **Código do Projeto** 
-Firebase (onde geralmente é o nome do seu projeto), onde se reduz bastante chamadas,
+Firebase (*onde geralmente é o nome do seu projeto*), onde se reduz bastante chamadas,
 por exemplo:
 
 ```pascal
@@ -146,7 +161,7 @@ end;
 Desta forma o retorno em JSONObject irá conter o padrão Google de ID's, para utilizar um ID personalizado 
 por você mesmo, basta não incluir o **.AutoIncremento()**. 
 
-**OBS: O cuidado deve ser redobrado caso decida não utilizar o AutoIncremento** [VIDE LICENÇA DO **OtsFirebase**]; 
+**OBS: O cuidado deve ser redobrado caso decida não utilizar o AutoIncremento** [*VIDE LICENÇA DO **OtsFirebase***]; 
 
 ### Outras chamadas dentro das classes para consumo da api pelo **OtsFirebase** ::
 Além do básico já comentado acima, existem alguns recursos do **OtsFirebase** que podem ser executados 
@@ -154,11 +169,11 @@ sem sair da linha padrão desejada após o **.Database.Resource([node_do_documen
 por exemplo:
 - **ContentType** 
 - **AcceptType** 
-- **QueryParams**    (Que são chamadas acrescentadas como parâmetro na url)
+- **QueryParams**    (*Que são chamadas acrescentadas como parâmetro na url*)
 - **Header's** 
 - **Token**
-- **AutoIncremento** (Usado para definir se vai usar o padrão do Google nos root's dos documentos) 
-- **OrderByKey**     (Este é usado por último nas chamadas) 
+- **AutoIncremento** (*Usado para definir se vai usar o padrão do Google nos root's dos documentos*) 
+- **OrderByKey**     (*Este é usado por último nas chamadas*) 
 
 
 
