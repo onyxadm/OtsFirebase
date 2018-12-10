@@ -1,7 +1,9 @@
 object Form2: TForm2
   Left = 0
   Top = 0
-  Caption = 'API Pessoa - Firebase Demo Mobile'
+  Caption = 
+    'Demonstrativo Firemonkey | OtsFirebase '#174' - Componente de Conex'#227'o' +
+    ' e Consumo do Google Firebase'
   ClientHeight = 565
   ClientWidth = 649
   FormFactor.Width = 320
@@ -16,7 +18,7 @@ object Form2: TForm2
     Size.Width = 649.000000000000000000
     Size.Height = 51.000000000000000000
     Size.PlatformDefault = False
-    TabOrder = 3
+    TabOrder = 4
     object edtEmail: TEdit
       Touch.InteractiveGestures = [LongTap, DoubleTap]
       Align = Client
@@ -239,9 +241,9 @@ object Form2: TForm2
   object Layout6: TLayout
     Align = Client
     Size.Width = 649.000000000000000000
-    Size.Height = 319.000000000000000000
+    Size.Height = 258.000000000000000000
     Size.PlatformDefault = False
-    TabOrder = 4
+    TabOrder = 5
     object memoResp: TMemo
       Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
       DataDetectorTypes = []
@@ -251,11 +253,11 @@ object Form2: TForm2
       TextSettings.WordWrap = True
       Align = Client
       Size.Width = 649.000000000000000000
-      Size.Height = 319.000000000000000000
+      Size.Height = 258.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 0
       Viewport.Width = 645.000000000000000000
-      Viewport.Height = 315.000000000000000000
+      Viewport.Height = 254.000000000000000000
     end
   end
   object lbResp: TLabel
@@ -264,13 +266,61 @@ object Form2: TForm2
     Margins.Left = 10.000000000000000000
     Margins.Bottom = 2.000000000000000000
     Position.X = 10.000000000000000000
-    Position.Y = 227.000000000000000000
+    Position.Y = 288.000000000000000000
     Size.Width = 639.000000000000000000
     Size.Height = 17.000000000000000000
     Size.PlatformDefault = False
     TextSettings.Font.StyleExt = {00070000000000000004000000}
     TextSettings.FontColor = claBlue
     Text = 'Resposta: '
+  end
+  object Layout4: TLayout
+    Align = Top
+    Margins.Top = 5.000000000000000000
+    Margins.Bottom = 5.000000000000000000
+    Position.Y = 232.000000000000000000
+    Size.Width = 649.000000000000000000
+    Size.Height = 51.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    object edtUrlRequest: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Client
+      TabOrder = 0
+      Text = 'http://onyxsistemas.com/services/'
+      TextSettings.Font.Family = 'Verdana'
+      TextSettings.Font.Size = 14.000000000000000000
+      TextSettings.FontColor = claBlue
+      Margins.Left = 10.000000000000000000
+      Margins.Right = 2.000000000000000000
+      Margins.Bottom = 2.000000000000000000
+      Size.Width = 527.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      StyledSettings = []
+    end
+    object Label4: TLabel
+      Align = Top
+      Margins.Left = 10.000000000000000000
+      Position.X = 10.000000000000000000
+      Size.Width = 639.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Consulta em outros WebServices'
+    end
+    object btnExecute: TButton
+      Align = Right
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 2.000000000000000000
+      Position.X = 539.000000000000000000
+      Position.Y = 17.000000000000000000
+      Size.Width = 100.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      Text = 'Execute Request'
+      OnClick = btnExecuteClick
+    end
   end
   object OtsFirebase: TOtsFirebase
     Left = 40

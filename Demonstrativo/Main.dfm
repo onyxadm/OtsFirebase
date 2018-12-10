@@ -8,6 +8,7 @@ object frmMain: TfrmMain
   ClientHeight = 788
   ClientWidth = 765
   Color = clBtnFace
+  DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -34,8 +35,8 @@ object frmMain: TfrmMain
     Caption = 'Password'
   end
   object Label3: TLabel
-    Left = 9
-    Top = 219
+    Left = 8
+    Top = 229
     Width = 29
     Height = 13
     Caption = 'Token'
@@ -55,15 +56,15 @@ object frmMain: TfrmMain
     Caption = 'API_KEY'
   end
   object Label7: TLabel
-    Left = 8
-    Top = 176
+    Left = 464
+    Top = 135
     Width = 62
     Height = 13
     Caption = 'PROJECT_ID'
   end
   object lbResp: TLabel
-    Left = 486
-    Top = 210
+    Left = 78
+    Top = 223
     Width = 90
     Height = 19
     Caption = 'Resposta: '
@@ -81,6 +82,13 @@ object frmMain: TfrmMain
     Height = 13
     Caption = 'Node '
   end
+  object Label5: TLabel
+    Left = 8
+    Top = 176
+    Width = 145
+    Height = 13
+    Caption = 'Consulta a outro WebServices'
+  end
   object edtEmail: TEdit
     Left = 9
     Top = 20
@@ -97,7 +105,7 @@ object frmMain: TfrmMain
   object edtPassword: TEdit
     Left = 8
     Top = 60
-    Width = 450
+    Width = 451
     Height = 27
     Font.Charset = DEFAULT_CHARSET
     Font.Color = 10878976
@@ -110,9 +118,9 @@ object frmMain: TfrmMain
   end
   object memoToken: TMemo
     Left = 9
-    Top = 235
+    Top = 248
     Width = 748
-    Height = 152
+    Height = 139
     Anchors = [akLeft, akTop, akRight]
     ScrollBars = ssVertical
     TabOrder = 2
@@ -140,7 +148,7 @@ object frmMain: TfrmMain
   object edtApiKey: TEdit
     Left = 8
     Top = 147
-    Width = 450
+    Width = 451
     Height = 27
     Font.Charset = DEFAULT_CHARSET
     Font.Color = 10878976
@@ -152,9 +160,9 @@ object frmMain: TfrmMain
     Text = 'AIzaSyC2ofTLxZoA9HyXPWLV6Oub02LW0mRdTjs'
   end
   object edtProjectId: TEdit
-    Left = 8
-    Top = 188
-    Width = 450
+    Left = 464
+    Top = 147
+    Width = 292
     Height = 27
     Font.Charset = DEFAULT_CHARSET
     Font.Color = 10878976
@@ -217,7 +225,7 @@ object frmMain: TfrmMain
   object edtNode2: TEdit
     Left = 215
     Top = 105
-    Width = 243
+    Width = 244
     Height = 27
     Font.Charset = DEFAULT_CHARSET
     Font.Color = 10878976
@@ -227,8 +235,32 @@ object frmMain: TfrmMain
     ParentFont = False
     TabOrder = 12
   end
+  object edtUrlRequest: TEdit
+    Left = 8
+    Top = 189
+    Width = 451
+    Height = 27
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = 10878976
+    Font.Height = -16
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 13
+    Text = 'http://onyxsistemas.com/services/'
+    TextHint = 'UrlRequest'
+  end
+  object btnExecute: TButton
+    Left = 613
+    Top = 190
+    Width = 143
+    Height = 25
+    Caption = 'Execute Request'
+    TabOrder = 14
+    OnClick = btnExecuteClick
+  end
   object OtsFirebase: TOtsFirebase
-    Left = 688
-    Top = 104
+    Left = 608
+    Top = 192
   end
 end

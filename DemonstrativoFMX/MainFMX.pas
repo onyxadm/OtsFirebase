@@ -49,10 +49,15 @@ type
     noAuth: TCheckBox;
     bLogout: TButton;
     bCreateUser: TButton;
+    Layout4: TLayout;
+    edtUrlRequest: TEdit;
+    Label4: TLabel;
+    btnExecute: TButton;
     procedure bLogoutClick(Sender: TObject);
     procedure bCreateUserClick(Sender: TObject);
     procedure bLoginUserClick(Sender: TObject);
     procedure bGetDocumentClick(Sender: TObject);
+    procedure btnExecuteClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -179,6 +184,19 @@ begin
                         .Get()
                         .ToJSON;
   end;
+
+  Time2 := Now - Time1;
+
+  lbResp.Text := 'Resposta em: ' + FormatDateTime('hh:mm:ss:zzz', Time2);
+end;
+
+procedure TForm2.btnExecuteClick(Sender: TObject);
+var
+  Time1, Time2: TTime;
+begin
+  Time1 := Now;
+
+  memoResp.Text := OtsFirebase.Request(edtUrlRequest.Text).Get().ToJSON;
 
   Time2 := Now - Time1;
 
