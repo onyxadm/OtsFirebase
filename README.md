@@ -11,7 +11,7 @@ Isso mesmo. Se você já instalou o **OtsFirebase** no seu Delphi, você deve te
 possui propriedades publicadas visíveis ao Object Inspector, foi desenvolvido dessa forma para evitar 
 que suas informações fiquem vulneráveis a algum tipo de "pessoa curiosa" e você deve informá-las em tempo de execução.
 
-### Mais o OtsFirebase serve apenas para consumo do próprio Firebase?
+### Mas o OtsFirebase serve apenas para consumo do próprio Firebase?
 **Não**, o **OtsFirebase** pode consumir qualquer webservices, veja o quanto é fácil: 
 ```pascal
     OtsFirebase.Request(MINHA_URL).Get();
@@ -88,9 +88,7 @@ assim você não precisará se preocupar com o refresh do e/ou informação do T
 por exemplo: 
 
 ```pascal
-    OtsFirebase.API(MINHA_API_KEY, MEU_PROJECT_ID)
-        .Auth(email@email.com, minha_senha, TRUE)
-        .ToJSONObject.ToString;
+    OtsFirebase.API(MINHA_API_KEY, MEU_PROJECT_ID).Auth(email@email.com, minha_senha, TRUE).ToJSONObject;
 ```
 O **TRUE** no terceiro parâmetro da autenticação informa ao **OtsFirebase** para criar o usuário informado;
 
@@ -101,9 +99,7 @@ não irá criar um usuário, irá apenas autenticar-se,
 por exemplo:
 
 ```pascal
-    OtsFirebase.API(MINHA_API_KEY, MEU_PROJECT_ID)
-        .Auth(email@email.com, minha_senha)
-        .ToJSONObject.ToString;
+    OtsFirebase.API(MINHA_API_KEY, MEU_PROJECT_ID).Auth(email@email.com, minha_senha).ToJSONObject;
 ```    
 Pronto, assim o **OtsFirebase** já tem as credenciais necessárias para fazer qualquer chamada à api. 
 Além disso você pode autenticar durante chamada qualquer de consumo à api sem a necessidade de fazé-la separadamente, 
