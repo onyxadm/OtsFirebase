@@ -4,15 +4,19 @@ Componente Delphi de Consumo do Google Firebase
 # ONYX Tecnologia em Softwares
 http://www.onyxsistemas.com
 
+## Chamada à api rest do Google Firebase: [Get, Post, Put, Patch, Delete]
+
 ### Componente sem propriedades? Como assim? "#"
 Isso mesmo. Se você já instalou o **OtsFirebase** no seu Delphi, você deve ter notado que o componente não 
 possui propriedades publicadas visíveis ao Object Inspector, foi desenvolvido dessa forma para evitar 
 que suas informações fiquem vulneráveis a algum tipo de "pessoa curiosa" e você deve informá-las em tempo de execução.
 
 ### Se não tem propriedades visíveis ao Object Inspector, posso criá-lo em Run-Time?
-**Sim**, pode trabalhar normalmente como achar melhor. 
-
-## Chamada padrão à api rest do Google Firebase: [Get, Post, Put, Patch, Delete]
+**Sim**, pode trabalhar normalmente como achar melhor. Para ajudá-lo nisso, foi criado o arquivo 
+**OtsFirebase.Integration.pas**, desta forma siga os seguintes passos: 
+1. Instale o **OtsFirebase** no seu Delphi;
+2. Adicione o **OtsFirebase.Integration.pas** ao seu projeto **Vcl/Fmx**; 
+3. Pronto! Agora basta você utilizar a chamada da instância **Firebase()...** sem se preocupar com a criação do mesmo;
 
 ## Forma de uso :: 
 ### Partindo da premissa que seu projeto firebase já esta criado no Console Firebase. 
