@@ -27,7 +27,8 @@ Ainda é possível passar token, parâmetros, header's, etc.
 **OtsFirebase.Integration.pas**, para isso siga os seguintes passos: 
 1. Instale o **OtsFirebase** no seu Delphi;
 2. Adicione o **OtsFirebase.Integration.pas** ao seu projeto **Vcl/Fmx**; 
-3. Pronto! Agora basta você utilizar a chamada da instância **Firebase()...** sem se preocupar com a criação do mesmo;
+3. Pronto! Agora basta você utilizar a chamada da instância **Firebase()...** sem se preocupar com a criação do mesmo; 
+
 Desta forma é mantida apenas uma instância, e caso use para fim de consumo ao Firebase, não fica sendo necessário, 
 realizar a autenticação em todas as requisições, pois o token **JWT** do primeiro acesso ainda pode 
 ser válido, e por lógica a primeira requisição (*onde acontece a autenticação*) é sempre mais demorada que as outras. 
