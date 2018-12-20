@@ -1,5 +1,5 @@
 # OtsFirebase
-Componente Delphi de Consumo do Google Firebase
+Componente Delphi Vcl/FMX para Consumo do Google Firebase
 
 # ONYX Tecnologia em Softwares
 http://www.onyxsistemas.com
@@ -18,7 +18,7 @@ que suas informações fiquem vulneráveis a algum tipo de "pessoa curiosa" e vo
 ```
 Ainda é possível passar token, parâmetros, header's, etc.
 ```pascal
-    OtsFirebase.Request(MINHA_URL, MEU_TOKEN).Resource([PARAMS]).Header(HEADER_NAME, HERADER_VALUE).Get();
+    OtsFirebase.Request(MINHA_URL, MEU_TOKEN).Resource([PARAMS]).Header(HEADER_NAME, HEADER_VALUE).Get();
 ```
 *Fácil não?*
 
@@ -113,9 +113,9 @@ begin
   Obj := OtsFirebase.API(MINHA_API_KEY, MEU_PROJECT_ID)  //Ou apenas OtsFirebase.Auth(email@email.com, minha_senha)
             .Auth(email@email.com, minha_senha)
             .Database
-            .Resource([node_do_documento])  //Ex.: 	Vendas/Itens então ficaria assim: 
-            .Get();    			    // 		**.Resource(['Vendas', 'Itens'])** ou 
-					    // 		**.Resource(['Vendas/Itens'])**
+            .Resource([node_do_documento])  //Ex.: Vendas/Itens então ficaria assim: 
+            .Get();    			    // 	**.Resource(['Vendas', 'Itens'])** ou 
+					    // 	**.Resource(['Vendas/Itens'])**
 end;    
 ```
 O **OtsFirebase** irá autenticar e na mesma chamada vai retornar o JSONObject da sua solicitação, desta forma você tem 
@@ -133,9 +133,9 @@ var
 begin
   Obj := OtsFirebase.API(MEU_PROJECT_ID) 
             .Database 
-            .Resource([node_do_documento])  //Ex.: 	Vendas/Itens então ficaria assim: 
-            .Get();    			    // 		**.Resource(['Vendas', 'Itens'])** ou 
-					    // 		**.Resource(['Vendas/Itens'])**
+            .Resource([node_do_documento])  //Ex.: Vendas/Itens então ficaria assim: 
+            .Get();    			    // 	**.Resource(['Vendas', 'Itens'])** ou 
+					    // 	**.Resource(['Vendas/Itens'])**
 end;    
 ```
 
