@@ -35,39 +35,40 @@ type
   strict private
     class var FInstance: TFirebase;
   public
-    constructor Create;
-    constructor CreatePrivate;
-    class function GetInstance: TFirebase;
-    class procedure FreeInstance;
+    constructor Create();
+    constructor CreatePrivate();
+    class function GetInstance(): TFirebase;
+    class procedure FreeInstance();
   end;
 
-function Firebase(API_KEY: string = ''; PROJECT_ID: string = ''): TFirebase;
+function Firebase(API_KEY: string; PROJECT_ID: string): TFirebase; overload;
+function Firebase(): TFirebase; overload;
 
 implementation
 
 { TFirebase }
 
-constructor TFirebase.Create;
+constructor TFirebase.Create();
 begin
   raise Exception.Create('Utilize o GetInstance');
 end;
 
-constructor TFirebase.CreatePrivate;
+constructor TFirebase.CreatePrivate();
 begin
   inherited Create(Application);
 end;
 
-class function TFirebase.GetInstance: TFirebase;
+class function TFirebase.GetInstance(): TFirebase;
 begin
   if not(Assigned(FInstance)) then
   begin
-    FInstance := TFirebase.CreatePrivate;
+    FInstance := TFirebase.CreatePrivate();
   end;
 
   Result := FInstance;
 end;
 
-class procedure TFirebase.FreeInstance;
+class procedure TFirebase.FreeInstance();
 begin
   if Assigned(FInstance) then
   begin
@@ -75,10 +76,15 @@ begin
   end;
 end;
 
-function Firebase(API_KEY: string = ''; PROJECT_ID: string = ''): TFirebase;
+function Firebase(API_KEY: string; PROJECT_ID: string): TFirebase;
 begin
-  Result := TFirebase.GetInstance;
+  Result := TFirebase.GetInstance();
   Result.API(API_KEY, PROJECT_ID);
+end;
+
+function Firebase(): TFirebase;
+begin
+  Result := TFirebase.GetInstance();
 end;
 
 end.
