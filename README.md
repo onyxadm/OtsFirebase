@@ -4,6 +4,12 @@ Componente Delphi Vcl/FMX para Consumo do Google Firebase
 # ONYX Tecnologia em Softwares
 http://www.onyxsistemas.com
 
+### Canal no Youtube
+https://www.youtube.com/playlist?list=PLAFR1oez5EL08qr7F5k1EKp4xUF44fHrW
+
+### Grupo no Telegram
+https://t.me/OtsFirebase
+
 ## Chamada a api rest: [Get, Post, Put, Patch, Delete]
 
 ### Componente sem propriedades? Como assim? "#"
