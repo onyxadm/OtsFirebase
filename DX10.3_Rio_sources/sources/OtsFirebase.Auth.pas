@@ -8,7 +8,6 @@ unit OtsFirebase.Auth;
   Site....: www.onyxsistemas.com
   Licença.: Privada e protegida - © Todos os direitos reservados.
   email...: admin@onyxsistemas.com
-  Fones...: 063 98421-4630 / 99215-6054
 }
 
 interface
@@ -49,8 +48,9 @@ type
     FLocalId       : String;
     FRefreshToken  : String;
     FRegistered    : Boolean;
+    FAMessage      : String;
 
-    function FromJsonObj(JsonObj: TJSONObject): TAuthUser;
+    class function FromJsonObj(JsonObj: TJSONObject): TAuthUser;
   public
     constructor Create();
 
@@ -72,12 +72,14 @@ type
     property localId: String read FLocalId write FLocalId;
     property refreshToken: String read FRefreshToken write FRefreshToken;
     property registered: Boolean read FRegistered write FRegistered;
+    property AMessage: String read FAMessage write FAMessage;
   end;
 
 var
-  _API_KEY   : string;
-  _PROJECT_ID: string;
-  API_AUTH   : TAuthUser;
+  _API_KEY    : string;
+  _PROJECT_ID : string;
+  API_AUTH    : TAuthUser;
+  FReqResource: TResource;
 
   // 60 segundos em um minuto, 60 minutos em uma hora, 24 horas em um dia
 const
@@ -95,13 +97,17 @@ begin
 end;
 
 function TAuthUser.TokenExpired(ExpireIn: TDateTime): Boolean;
+var
+  FDateTime, FDateTimeOLD: TDateTime;
 begin
-  Result := ExpireIn < Now;
+  FDateTime    := Now;
+  FDateTimeOLD := ExpireIn - StrToDateTime('00:14:59');
+  Result       := FDateTimeOLD < FDateTime;
 end;
 
 function Authentication(Email, Password: string; ACreateAccount: Boolean): TJSONObject;
 var
-  AResp      : string;
+  AResp, AMsg: string;
   RESTRequest: TRESTRequest;
   RESTClient : TRESTClient;
 begin
@@ -124,9 +130,6 @@ begin
       Result := TJSONObject.ParseJSONValue(RESTRequest.Response.JSONValue.ToString) as TJSONObject;
   end;
 
-  RESTRequest.Free;
-  RESTClient.Free;
-
   if Assigned(Result) and (Result is TJSONObject) then
   begin
     AResp := Result.ToString;
@@ -134,44 +137,53 @@ begin
     if ACreateAccount then
     begin
       if UpperCase(AResp).Contains('EMAIL_EXISTS') then
-        raise Exception.Create('Usuário de acesso já cadastrado.')
+        AMsg := 'Usuário de acesso já cadastrado.'
       else if UpperCase(AResp).Contains('API KEY NOT VALID') then
-        raise Exception.Create('A API_KEY informada esta incorreta.')
+        AMsg := 'A API_KEY informada esta incorreta.'
       else if UpperCase(AResp).Contains('PERMISSION DENIED') then
-        raise Exception.Create('Permissão negada.')
+        AMsg := 'Permissão negada.'
+      else if UpperCase(AResp).Contains('OPERATION_NOT_ALLOWED') then
+        AMsg := 'Operação não permitida.'
       else if UpperCase(AResp).Contains('ERROR') then
-        raise Exception.Create(AResp);
+        AMsg := AResp;
     end
     else
     begin
       if UpperCase(AResp).Contains('EMAIL_NOT_FOUND') then
-        raise Exception.Create('Usuário de acesso não encontrado.')
+        AMsg := 'Usuário de acesso não encontrado.'
       else if UpperCase(AResp).Contains('INVALID_PASSWORD') then
-        raise Exception.Create('A senha do usuário de acesso informado esta incorreta.')
+        AMsg := 'A senha do usuário de acesso informado esta incorreta.'
       else if UpperCase(AResp).Contains('USER_DISABLED') then
-        raise Exception.Create('Acesso negado pelo administrador.')
+        AMsg := 'Acesso negado pelo administrador. ' + ^M + '[Usuário desabilitado]'
       else if UpperCase(AResp).Contains('API KEY NOT VALID') then
-        raise Exception.Create('A API_KEY informada esta incorreta.')
+        AMsg := 'A API_KEY informada esta incorreta.'
       else if UpperCase(AResp).Contains('PERMISSION DENIED') then
-        raise Exception.Create('Permissão negada.')
+        AMsg := 'Permissão negada.'
       else if UpperCase(AResp).Contains('ERROR') then
-        raise Exception.Create(AResp);
+        AMsg := AResp;
     end;
 
-    if UpperCase(AResp).Contains('LOCALID') and UpperCase(AResp).Contains('IDTOKEN') then
-      Result := Result;
+    Result.AddPair(TJSONPair.Create('AMessage', AMsg));
   end;
 end;
 
 function TAuthUser.CreateUser(Sender: TAuthUser; Email, Password: string): TAuthUser;
 begin
   Result := Sender.FromJsonObj(Authentication(Email, Password, True));
+
+  if not Trim(Result.idToken).IsEmpty then
+    Result.ExpireDateTime := Now + (StrToInt(Result.expiresIn) / SecondsInADay);
 end;
 
 function TAuthUser.LoginUser(Sender: TAuthUser; Email, Password: string): TAuthUser;
 begin
-  if not API_AUTH.registered or TokenExpired(API_AUTH.ExpireDateTime) then
-    Result := Sender.FromJsonObj(Authentication(Email, Password, False))
+  if not Sender.registered or TokenExpired(Sender.ExpireDateTime) then
+  begin
+    Result := TAuthUser.FromJsonObj(Authentication(Email, Password, False));
+
+    if not Trim(Result.idToken).IsEmpty then
+      Result.ExpireDateTime := Now + (StrToInt(Result.expiresIn) / SecondsInADay);
+  end
   else
     Result := Sender;
 end;
@@ -185,6 +197,7 @@ begin
   Sender.kind           := '';
   Sender.localId        := '';
   Sender.refreshToken   := '';
+  Sender.AMessage       := '';
   Sender.ExpireDateTime := 0;
   Sender.registered     := False;
 
@@ -195,6 +208,7 @@ begin
   API_AUTH.kind           := '';
   API_AUTH.localId        := '';
   API_AUTH.refreshToken   := '';
+  API_AUTH.AMessage       := '';
   API_AUTH.ExpireDateTime := 0;
   API_AUTH.registered     := False;
 
@@ -206,22 +220,33 @@ begin
   Result := TJson.ObjectToJsonObject(Self, [joDateIsUTC, joDateFormatISO8601, joIgnoreEmptyStrings, joIgnoreEmptyArrays]);
 end;
 
-function TAuthUser.FromJsonObj(JsonObj: TJSONObject): TAuthUser;
+class function TAuthUser.FromJsonObj(JsonObj: TJSONObject): TAuthUser;
 begin
   Result := TJson.JsonToObject<TAuthUser>(JsonObj, [joDateIsUTC, joDateFormatISO8601, joIgnoreEmptyStrings, joIgnoreEmptyArrays]);
-  Result.ExpireDateTime := Now + (StrToInt(Result.expiresIn) / SecondsInADay);
 end;
 
 function TAuthUser.Database(ABaseUrl: string = ''): TResource;
 var
   AUrl, AToken: string;
 begin
+  Result := TResource.Create(); //FReqResource;
+
   AUrl := ABaseUrl;
   if Trim(AUrl).isEmpty and not Trim(_PROJECT_ID).isEmpty then
     AUrl := Format(FIREBASE_DATABASE_URL, [_PROJECT_ID]);
 
   AToken := ifThen(not Trim(API_AUTH.idToken).isEmpty, API_AUTH.idToken, '');
-  Result := TResource.Create(AUrl).Token(AToken);
+
+  if not Trim(AUrl).IsEmpty then
+    Result.SetUrl(AUrl);
+
+  if not Trim(AToken).IsEmpty then
+    Result.Token(AToken, Simple);
 end;
+
+initialization
+  FReqResource := TResource.Create();
+finalization
+  FReqResource.Free;
 
 end.

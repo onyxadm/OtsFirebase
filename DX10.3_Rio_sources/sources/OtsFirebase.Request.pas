@@ -8,7 +8,6 @@ unit OtsFirebase.Request;
   Site....: www.onyxsistemas.com
   Licença.: Privada e protegida - © Todos os direitos reservados.
   email...: admin@onyxsistemas.com
-  Fones...: 063 98421-4630 / 99215-6054
 }
 
 {$WARN UNSAFE_TYPE OFF}
@@ -19,12 +18,14 @@ interface
 
 uses
   OtsFirebase.Constantes,
+//  jsonadapter,
 
+  REST.Client,
+  REST.Types,
+  REST.HttpClient,
   Data.DB,
   Soap.EncdDecd,
   IPPeerClient,
-  REST.Client,
-  REST.Types,
   REST.JSON,
   REST.Response.Adapter,
   System.JSON,
@@ -41,50 +42,75 @@ uses
   System.Generics.Collections;
 
 type
+  TTokenType = (Simple, Basic, Bearer);
+
   TResource = class(TRESTRequest)
   private
     FRESTClient    : TRESTClient;
     FRESTResponse  : TRESTResponse;
-    FContent       : TJSONObject;
+//    FContent       : TJSONObject;
     FResourceParams: TArrString;
     FLogin         : string;
     FPassword      : string;
     FToken         : string;
     FTokenParam    : string;
+    FTokenType     : TTokenType;
     FAutoIncremento: Boolean;
     FQueryParams   : TDictionary<string, string>;
     FResponseCode  : Integer;
     FSetPretty     : Boolean;
+    FResponseTime  : TTime;
 
     function Execute(AMethod: TRESTRequestMethod): string; overload;
     function EncodeQueryParams(): string;
     function EncodeResourceParams(): string;
     function EncodeToken(): string;
+    function GetResponseJson: TJSONValue;
     function GetResponseCode: Integer;
+    function GetResponseTime: TTime;
     function GetResponseHeader(const Header: string): string;
-    function GetContent: TJSONObject;
+    function GetResponseError: string;
   public
     constructor Create(URL: string = ''); overload;
     destructor Destroy; override;
 
     function Accept(AcceptType: String = ''): TResource;
+    function AcceptEncoding(AcceptEncodingType: String = ''): TResource;
     /// <summary>
     /// Utilizado apenas no consumo do Google Firebase com POST.
     /// </summary>
     function AutoIncremento(): TResource;
     function SetUrl(AURL: string): TResource;
-    function ContentType(ContentType: String = ''): TResource;
-    function Header(Name: string; Value: string; Kind: TRESTRequestParameterKind = pkHTTPHEADER; Options: TRESTRequestParameterOptions = [])
-      : TResource;
-    function Param(Name: string; Value: string; Kind: TRESTRequestParameterKind = pkGETorPOST; Options: TRESTRequestParameterOptions = [])
-      : TResource;
+    function ContentType(AContentType: String = ''; ToHeader: Boolean = False): TResource;
+    function Header(Name: string; Value: string; Kind: TRESTRequestParameterKind = pkHTTPHEADER;
+      Options: TRESTRequestParameterOptions = []): TResource;
+    function Param(Name: string; Value: string; Kind: TRESTRequestParameterKind = pkGETorPOST;
+      Options: TRESTRequestParameterOptions = []; ContentType: TRESTContentType = TRESTContentType.ctNone): TResource;
     function URLSegment(Name, Value: string): TResource;
     function QueryParams(AParam, AValue: string): TResource;
     function Resource(AResource: TArrString): TResource; overload;
     function Resource(AResource: string): TResource; overload;
     function SetCredentials(const ALogin, APassword: String): TResource;
-    function Token(AToken: String; AParamName: string = 'auth'): TResource;
-    function TokenAuthBasic(ATokenBase64: string): TResource;
+    /// <summary>
+    /// Definindo o tipo de Token [AType]:
+    /// Simple: do tipo que é usado na url;
+    /// Basic ou Bearer: do tipo que é usado no Header codificado para Base64;
+    /// AParamName: Valor padrão: 'auth' e é usado apenas no modo Simple
+    /// </summary>
+    function Token(AToken: string; AType: TTokenType; AParamName: string = 'auth'): TResource;
+    function BodyClear(): TResource;
+    function Body(Content: TJSONObject): TResource; overload;
+    function Body(Content: TStream; AContentType: TRESTContentType = TRESTContentType.ctNone): TResource; overload;
+    function Body(Content: string; AContentType: TRESTContentType = TRESTContentType.ctNone): TResource; overload;
+    function Body(const Name: string; const StreamContent: TStream; const Kind: TRESTRequestParameterKind = pkREQUESTBODY;
+       const Options: TRESTRequestParameterOptions = [poDoNotEncode]; ContentType: TRESTContentType = TRESTContentType.ctNone): TResource; overload;
+    function Body(const Name: string; const StringContent: string; const Kind: TRESTRequestParameterKind = pkREQUESTBODY;
+       const Options: TRESTRequestParameterOptions = [poDoNotEncode]; ContentType: TRESTContentType = TRESTContentType.ctNone): TResource; overload;
+
+    {$IF COMPILERVERSION > 31}
+    function AddFile(const AName: string; const FileName: TFileName; const AKind: TRESTRequestParameterKind = pkFILE;
+        const AOptions: TRESTRequestParameterOptions = [poDoNotEncode]; AContentType: TRESTContentType = ctMULTIPART_FORM_DATA): TResource;
+    {$ENDIF}
 
     { Filtros firebase }
     /// <summary>
@@ -107,32 +133,55 @@ type
     /// </summary>
     function timeOut(Value: string = '3s'): TResource;
 
+    property ResponseJson: TJSONValue read GetResponseJson;
     property ResponseCode: Integer read GetResponseCode;
+    property ResponseTimeOut: TTime read GetResponseTime;
     property ResponseHeader[const Header: string]: string read GetResponseHeader;
+    property ResponseError: string read GetResponseError;
 
     function ContentRequest(Content: TJSONObject; AMethod: TRESTRequestMethod): string;
-    function Get(): string; overload;
-    function GetJSONObject(): TJSONObject; overload;
-    function GetJSONObject(out AValue: string): TJSONObject; overload;
 
-    function Post(Content: string): String; overload;
-    function Post(Content: TJSONObject): String; overload;
+    function Get(Content: TJSONObject = nil): string; overload;
+    function GetJSONObject(Content: TJSONObject = nil): TJSONObject; overload;
+    function GetJSONObject(out AValue: string): TJSONObject; overload;
+    function GetJSONArray(): TJSONArray;
+
+    function Post(): string; overload;
+    function Post(NotUse: Integer): TJSONObject; overload;
+    function Post(Content: string): string; overload;
+    function Post(Content: TJSONObject): string; overload;
+    function Post(Content: string; var ResultString: string): TJSONObject; overload;
     function Post(Content: TJSONObject; var ResultString: string): TJSONObject; overload;
 
     function Put(Content: string): string; overload;
     function Put(Content: TJSONObject): string; overload;
     function Put(Content: TJSONObject; var ResultString: string): TJSONObject; overload;
 
+    function Patch(): string; overload;
+    function Patch(NotUse: Integer): TJSONObject; overload;
     function Patch(Content: string): string; overload;
+    function Patch(Content: TJSONObject): string; overload;
+    function Patch(Content: string; var ResultString: string): TJSONObject; overload;
+    function Patch(Content: TJSONObject; var ResultString: string): TJSONObject; overload;
 
     procedure Delete();
 
-    procedure ToDataSet(ADataSet: TDataSet);
+    procedure ToDataSet(ADataSet: TDataSet; APath: string = '');
   end;
 
+  TRESTResponseHelper = class helper for TRESTResponse
+  public
+    function ContentAsJsonObject: TJSONObject;
+    function ContentAsJsonArray: TJSONArray;
+  end;
+
+function StrToJSONObjUTF8(AValue: string): TJSONObject;
+function StrToJSONArrayUTF8(AValue: string): TJSONArray;
+
 function checkDelim(const AValue, ADelim: String): String;
-function ObtemValue(JSON, Value: string): string;
-procedure JsonToDataset(ADataSet: TDataSet; AJSON: string);
+function StrToStream(StrData: string): TMemoryStream;
+function FileToStream(AFileName: TFileName): TMemoryStream;
+procedure JsonToDataset(ADataSet: TDataSet; AJSON: string; APath: string = '');
 
 implementation
 
@@ -145,9 +194,10 @@ begin
 
   inherited Create(FRESTClient);
 
-  FRESTResponse             := TRESTResponse.Create(Self);
-  FRESTResponse.ContentType := MediaType_Json;
-  Response                  := FRESTResponse;
+  FRESTClient.AcceptEncoding := 'gzip, deflate, br';
+  FRESTResponse              := TRESTResponse.Create(Self);
+  FRESTResponse.ContentType  := 'application/json; charset=UTF-8';
+  Response                   := FRESTResponse;
 
   ContentType(MediaType_Json);
   FQueryParams    := TDictionary<string, string>.Create;
@@ -157,7 +207,6 @@ end;
 
 destructor TResource.Destroy;
 begin
-  FRESTClient.Free;
   FRESTResponse.Free;
 
   if Assigned(FQueryParams) then
@@ -166,27 +215,53 @@ begin
   inherited;
 end;
 
+function StrToJSONObjUTF8(AValue: string): TJSONObject;
+begin
+  Result := TJSONObject.ParseJSONValue(TEncoding.UTF8.GetBytes(AValue), 0) as TJSONObject;
+end;
+
+function StrToJSONArrayUTF8(AValue: string): TJSONArray;
+begin
+  Result := TJSONObject.ParseJSONValue(TEncoding.UTF8.GetBytes(AValue), 0) as TJSONArray;
+end;
+
 function checkDelim(const AValue, ADelim: String): String;
 begin
   Result := Trim(AValue);
   if not Trim(Result).isEmpty then
-    if RightStr(Result, 1) <> ADelim then { Tem delimitador no final ? }
-      Result := Result + ADelim;
+  if RightStr(Result, 1) <> ADelim then
+    Result := Result + ADelim;
+end;
+
+function StrToStream(StrData: string): TMemoryStream;
+begin
+  Result := TMemoryStream.Create;
+  Result.WriteBuffer(Pointer(StrData)^, Length(StrData));
+  Result.Position := 0;
+end;
+
+function FileToStream(AFileName: TFileName): TMemoryStream;
+begin
+  Result := TMemoryStream.Create;
+  Result.LoadFromFile(AFileName);
+  Result.Position := 0;
 end;
 
 function TResource.Execute(AMethod: TRESTRequestMethod): string;
 var
   vURL, vParams, vEncodedCredentials: string;
+  vTime: TTime;
 begin
   Result := '';
   Method := AMethod;
 
+  vTime   := Now;
   vURL    := FRESTClient.BaseURL;
   vParams := EncodeResourceParams() + EncodeToken() + EncodeQueryParams();
   if not Trim(vParams).isEmpty then
     vURL := checkDelim(FRESTClient.BaseURL, '/');
 
-  if not Trim(FLogin).isEmpty and (Params.IndexOf(AUTHORIZATION_STR) = -1) then
+  if not Trim(FLogin).isEmpty and (Params.IndexOf(AUTHORIZATION_STR) = -1) and (FTokenType = Simple) then
   begin
     vEncodedCredentials := EncodeString(Format('%s:%s', [FLogin, FPassword]));
     AddAuthParameter(AUTHORIZATION_STR, 'Basic ' + vEncodedCredentials, TRESTRequestParameterKind.pkHTTPHEADER, [poDoNotEncode]);
@@ -198,11 +273,6 @@ begin
     if (AMethod = rmPOST) and Trim(FRESTClient.BaseURL).Contains(_FIREBASE_DOMAIN_URL) then
       if not FAutoIncremento then
         Method := TRESTRequestMethod.rmPUT;
-
-    if Assigned(FContent) and (GetContent.Count > 0) then
-    begin
-      AddBody(GetContent);
-    end;
   end;
 
   FRESTClient.BaseURL := vURL + vParams;
@@ -211,22 +281,27 @@ begin
     try
       inherited Execute;
     except
+      // any kind of server/protocol error
+      on E: EHTTPProtocolException do
+      begin
+        Result := Response.Content;
+      end;
+      // Unknown error, might even be on the client side. raise it!
       on E: Exception do
       begin
-        raise Exception.Create(pChar('Erro retornado.' + ^M + E.Message));
+        Result := TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes('Erro retornado.' + E.Message), 0).ToJSON;
       end;
     end;
   finally
+    FResponseTime := (Now - vTime);
     FResponseCode := Response.StatusCode;
 
     if Assigned(Response.JSONValue) then
-      Result := Response.JSONValue.ToString;
+      Result := Response.JSONValue.ToString
+    else
+    if (FResponseCode > 300) and not Trim(Response.ErrorMessage).isEmpty then
+      Result := Response.ErrorMessage;
   end;
-end;
-
-function TResource.GetContent: TJSONObject;
-begin
-  Result := FContent;
 end;
 
 function TResource.Accept(AcceptType: String = ''): TResource;
@@ -238,26 +313,39 @@ begin
   Result             := Self;
 end;
 
+function TResource.AcceptEncoding(AcceptEncodingType: String = ''): TResource;
+begin
+  if Trim(AcceptEncodingType).isEmpty then
+    AcceptEncodingType := MediaType_Json;
+
+  FRESTClient.AcceptEncoding := AcceptEncodingType;
+  Result                     := Self;
+end;
+
 function TResource.SetUrl(AURL: string): TResource;
 begin
   FRESTClient.BaseURL := Trim(AURL);
   Result              := Self;
 end;
 
-function TResource.ContentType(ContentType: String = ''): TResource;
+function TResource.ContentType(AContentType: String = ''; ToHeader: Boolean = False): TResource;
 begin
-  if Trim(ContentType).isEmpty then
-    ContentType := MediaType_Json;
+  if Trim(AContentType).isEmpty then
+    AContentType := MediaType_Json;
 
-  FRESTClient.ContentType := ContentType;
+  FRESTClient.ContentType := AContentType;
   Result                  := Self;
+
+  if ToHeader and not Trim(AContentType).isEmpty then
+    Result.Header(sContentType, AContentType);
 end;
 
 function TResource.SetCredentials(const ALogin, APassword: String): TResource;
 begin
-  FLogin    := ALogin;
-  FPassword := APassword;
-  Result    := Self;
+  FLogin     := ALogin;
+  FPassword  := APassword;
+  FTokenType := TTokenType.Simple;
+  Result     := Self;
 end;
 
 function TResource.Header(Name: string; Value: string; Kind: TRESTRequestParameterKind = pkHTTPHEADER;
@@ -266,17 +354,17 @@ begin
   { 'Accept-Encoding', 'gzip' }
   Result := Self;
 
-  if not Trim(Name).isEmpty and not Trim(Value).isEmpty then
-    Result.AddParameter(Name, Value, Kind, Options);
+  if not Trim(Name).isEmpty then
+    Result.Params.AddItem(Name, Value, Kind, Options);
 end;
 
 function TResource.Param(Name: string; Value: string; Kind: TRESTRequestParameterKind = pkGETorPOST;
-  Options: TRESTRequestParameterOptions = []): TResource;
+  Options: TRESTRequestParameterOptions = []; ContentType: TRESTContentType = TRESTContentType.ctNone): TResource;
 begin
   Result := Self;
 
   if not Trim(Name).isEmpty and not Trim(Value).isEmpty then
-    Result.AddParameter(Name, Value, Kind, Options);
+    Result.Params.AddItem(Name, Value, Kind, Options, ContentType);
 end;
 
 function TResource.URLSegment(Name, Value: string): TResource;
@@ -284,7 +372,7 @@ begin
   Result := Self;
 
   if not Trim(Name).isEmpty and not Trim(Value).isEmpty then
-    Param(Name, Value, TRESTRequestParameterKind.pkURLSEGMENT);
+    Result.Params.AddUrlSegment(Name, Value);
 end;
 
 function TResource.Resource(AResource: TArrString): TResource;
@@ -299,22 +387,119 @@ begin
   (Result as TRESTRequest).Resource := AResource;
 end;
 
-function TResource.Token(AToken: String; AParamName: string = 'auth'): TResource;
-begin
-  FTokenParam := AParamName;
-  FToken      := AToken;
-  Result      := Self;
-end;
-
-function TResource.TokenAuthBasic(ATokenBase64: string): TResource;
+function TResource.Token(AToken: string; AType: TTokenType; AParamName: string = 'auth'): TResource;
 begin
   Result := Self;
 
-  if not Trim(ATokenBase64).isEmpty then
-  begin
-    Header(AUTHORIZATION_STR, 'Basic ' + ATokenBase64, pkHTTPHEADER, [poDoNotEncode]);
+  if not Trim(AToken).isEmpty then
+  case AType of
+    Simple:
+      begin
+        FTokenParam := AParamName;
+        FToken      := AToken;
+      end;
+  else
+    begin
+      case AType of
+        Basic:
+          if not AToken.Contains('Basic') then
+            AParamName := 'Basic ';
+
+        Bearer:
+          if not AToken.Contains('Bearer') then
+            AParamName := 'Bearer ';
+      end;
+
+      Result.AddParameter(AUTHORIZATION_STR, AParamName + AToken, pkHTTPHEADER, [poDoNotEncode]);
+      FTokenType := AType;
+    end;
   end;
 end;
+
+function TResource.BodyClear(): TResource;
+begin
+  Result := Self;
+  Result.ClearBody;
+end;
+
+function TResource.Body(Content: TJSONObject): TResource;
+begin
+  Result := Self;
+
+  if Assigned(Content) and (Content.Count > 0) then
+    Result.AddBody(Content);
+end;
+
+function TResource.Body(Content: TStream; AContentType: TRESTContentType = TRESTContentType.ctNone): TResource;
+begin
+  Result := Self;
+
+  if Assigned(Content) then
+  begin
+    Content.Position := 0;
+    Result.AddBody(Content, AContentType);
+  end;
+end;
+
+function TResource.Body(Content: string; AContentType: TRESTContentType = TRESTContentType.ctNone): TResource;
+begin
+  Result := Self;
+
+  if not Trim(Content).isEmpty then
+  begin
+    Result.AddBody(Content, AContentType);
+  end;
+end;
+
+function TResource.Body(const Name: string; const StreamContent: TStream; const Kind: TRESTRequestParameterKind = pkREQUESTBODY;
+    const Options: TRESTRequestParameterOptions = [poDoNotEncode]; ContentType: TRESTContentType = TRESTContentType.ctNone): TResource;
+begin
+  Result := Self;
+
+  if Assigned(StreamContent) then
+  begin
+    StreamContent.Position := 0;
+    Result.Params.AddItem(Name, StreamContent, Kind, Options, ContentType);
+  end;
+end;
+
+function TResource.Body(const Name: string; const StringContent: string; const Kind: TRESTRequestParameterKind = pkREQUESTBODY;
+    const Options: TRESTRequestParameterOptions = [poDoNotEncode]; ContentType: TRESTContentType = TRESTContentType.ctNone): TResource;
+begin
+  Result := Self;
+
+  if not Trim(StringContent).isEmpty then
+  begin
+    Result.Params.AddItem(Name, StringContent, Kind, Options, ContentType);
+  end;
+end;
+
+{$IF COMPILERVERSION > 31}
+function TResource.AddFile(const AName: string; const FileName: TFileName; const AKind: TRESTRequestParameterKind = pkFILE;
+    const AOptions: TRESTRequestParameterOptions = [poDoNotEncode]; AContentType: TRESTContentType = ctMULTIPART_FORM_DATA): TResource;
+begin
+  Result := Self;
+
+  if not Trim(FileName).isEmpty and FileExists(FileName) then
+  begin
+    Result
+      .Accept('*/*')
+      .ContentType(ContentTypeToString(AContentType), True);
+
+    (Result as TRESTRequest).Accept         := FRESTClient.Accept;
+    (Result as TRESTRequest).AcceptEncoding := FRESTClient.AcceptEncoding;
+
+    with Result.Params.AddItem do
+    begin
+      Kind        := AKind;
+      Name        := AName;
+      Value       := FileName;
+      Options     := AOptions;
+      ContentType := AContentType;
+    end;
+  end;
+end;
+{$ENDIF}
 
 function TResource.AutoIncremento(): TResource;
 begin
@@ -324,24 +509,38 @@ end;
 
 function TResource.ContentRequest(Content: TJSONObject; AMethod: TRESTRequestMethod): string;
 begin
-  FContent := Content;
-  Result   := Execute(AMethod);
+  if Assigned(Content) and (Content.Count > 0) then
+  begin
+    AddBody(Content);
+  end;
+
+  Result := Execute(AMethod);
 end;
 
-function TResource.Get(): string;
+function TResource.Get(Content: TJSONObject = nil): string;
 begin
+  if Assigned(Content) and (Content.Count > 0) then
+  begin
+    AddBody(Content);
+  end;
+
   Result := Execute(TRESTRequestMethod.rmGET);
 end;
 
-function TResource.GetJSONObject(): TJSONObject;
+function TResource.GetJSONObject(Content: TJSONObject = nil): TJSONObject;
 var
   AValue: string;
 begin
+  if Assigned(Content) and (Content.Count > 0) then
+  begin
+    AddBody(Content);
+  end;
+
   Result := TJSONObject.Create;
   AValue := Execute(TRESTRequestMethod.rmGET);
 
-  if not Trim(AValue).isEmpty and (AValue <> 'null') then
-    Result := TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(AValue), 0) as TJSONObject;
+  if not Trim(AValue).isEmpty and not MatchStr(AValue, ['', 'null', '{}', '[]']) then
+    Result := StrToJSONObjUTF8(AValue);
 end;
 
 function TResource.GetJSONObject(out AValue: string): TJSONObject;
@@ -349,40 +548,76 @@ begin
   Result := TJSONObject.Create;
   AValue := Execute(TRESTRequestMethod.rmGET);
 
-  if not Trim(AValue).isEmpty and (AValue <> 'null') then
-    Result := TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(AValue), 0) as TJSONObject;
+  if not Trim(AValue).isEmpty and not MatchStr(AValue, ['', 'null', '{}', '[]']) then
+    Result := StrToJSONObjUTF8(AValue);
 end;
 
-function TResource.Post(Content: string): String;
+function TResource.GetJSONArray(): TJSONArray;
+var
+  ResultString: string;
+begin
+  Result       := TJSONArray.Create;
+  ResultString := Execute(TRESTRequestMethod.rmGET);
+
+  if not Trim(ResultString).isEmpty and not MatchStr(ResultString, ['', 'null', '{}', '[]']) then
+    Result := StrToJSONArrayUTF8(ResultString);
+end;
+
+function TResource.Post(): string;
+begin
+  Result := Execute(TRESTRequestMethod.rmPOST);
+end;
+
+function TResource.Post(NotUse: Integer): TJSONObject;
+var
+  ResultString: string;
+begin
+  Result       := TJSONObject.Create;
+  ResultString := ContentRequest(nil, TRESTRequestMethod.rmPOST);
+
+  if not Trim(ResultString).isEmpty and not MatchStr(ResultString, ['', 'null', '{}', '[]']) then
+    Result := StrToJSONObjUTF8(ResultString);
+end;
+
+function TResource.Post(Content: string): string;
 var
   vJson: TJSONObject;
 begin
-  vJson := TJSONObject.ParseJSONValue(Content) as TJSONObject;
+  vJson := StrToJSONObjUTF8(Content);
   try
     Result := ContentRequest(vJson, TRESTRequestMethod.rmPOST);
   finally
   end;
 end;
 
-function TResource.Post(Content: TJSONObject): String;
+function TResource.Post(Content: TJSONObject): string;
 begin
   Result := ContentRequest(Content, TRESTRequestMethod.rmPOST);
+end;
+
+function TResource.Post(Content: string; var ResultString: string): TJSONObject;
+begin
+  Result       := TJSONObject.Create;
+  ResultString := Post(Content);
+
+  if not Trim(ResultString).isEmpty and not MatchStr(ResultString, ['', 'null', '{}', '[]']) then
+    Result := StrToJSONObjUTF8(ResultString);
 end;
 
 function TResource.Post(Content: TJSONObject; var ResultString: string): TJSONObject;
 begin
   Result       := TJSONObject.Create;
-  ResultString := ContentRequest(Content, TRESTRequestMethod.rmPOST);
+  ResultString := Post(Content);
 
-  if not Trim(ResultString).isEmpty and (ResultString <> 'null') and (ResultString <> '{}') then
-    Result := TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(ResultString), 0) as TJSONObject;
+  if not Trim(ResultString).isEmpty and not MatchStr(ResultString, ['', 'null', '{}', '[]']) then
+    Result := StrToJSONObjUTF8(ResultString);
 end;
 
 function TResource.Put(Content: string): string;
 var
   vJson: TJSONObject;
 begin
-  vJson := TJSONObject.ParseJSONValue(Content) as TJSONObject;
+  vJson := StrToJSONObjUTF8(Content);
   try
     Result := ContentRequest(vJson, TRESTRequestMethod.rmPUT);
   finally
@@ -399,19 +634,58 @@ begin
   Result       := TJSONObject.Create;
   ResultString := ContentRequest(Content, TRESTRequestMethod.rmPUT);
 
-  if not Trim(ResultString).isEmpty and (ResultString <> 'null') and (ResultString <> '{}') then
-    Result := TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(ResultString), 0) as TJSONObject;
+  if not Trim(ResultString).isEmpty and not MatchStr(ResultString, ['', 'null', '{}', '[]']) then
+    Result := StrToJSONObjUTF8(ResultString);
+end;
+
+function TResource.Patch(): string;
+begin
+  Result := Execute(TRESTRequestMethod.rmPATCH);
+end;
+
+function TResource.Patch(NotUse: Integer): TJSONObject;
+var
+  ResultString: string;
+begin
+  Result       := TJSONObject.Create;
+  ResultString := ContentRequest(nil, TRESTRequestMethod.rmPATCH);
+
+  if not Trim(ResultString).isEmpty and not MatchStr(ResultString, ['', 'null', '{}', '[]']) then
+    Result := StrToJSONObjUTF8(ResultString);
 end;
 
 function TResource.Patch(Content: string): string;
 var
   vJson: TJSONObject;
 begin
-  vJson := TJSONObject.ParseJSONValue(Content) as TJSONObject;
+  vJson := StrToJSONObjUTF8(Content);
   try
     Result := ContentRequest(vJson, TRESTRequestMethod.rmPATCH);
   finally
   end;
+end;
+
+function TResource.Patch(Content: TJSONObject): string;
+begin
+  Result := ContentRequest(Content, TRESTRequestMethod.rmPATCH);
+end;
+
+function TResource.Patch(Content: string; var ResultString: string): TJSONObject;
+begin
+  Result       := TJSONObject.Create;
+  ResultString := Patch(Content);
+
+  if not Trim(ResultString).isEmpty and not MatchStr(ResultString, ['', 'null', '{}', '[]']) then
+    Result := StrToJSONObjUTF8(ResultString);
+end;
+
+function TResource.Patch(Content: TJSONObject; var ResultString: string): TJSONObject;
+begin
+  Result       := TJSONObject.Create;
+  ResultString := Patch(Content);
+
+  if not Trim(ResultString).isEmpty and not MatchStr(ResultString, ['', 'null', '{}', '[]']) then
+    Result := StrToJSONObjUTF8(ResultString);
 end;
 
 procedure TResource.Delete();
@@ -493,9 +767,19 @@ begin
   FQueryParams.Add(AParam, AValue);
 end;
 
+function TResource.GetResponseJson: TJSONValue;
+begin
+  Result := FRESTResponse.JSONValue;
+end;
+
 function TResource.GetResponseCode: Integer;
 begin
   Result := FResponseCode;
+end;
+
+function TResource.GetResponseTime: TTime;
+begin
+  Result := FResponseTime;
 end;
 
 function TResource.GetResponseHeader(const Header: string): string;
@@ -503,73 +787,61 @@ begin
   Result := FRESTResponse.Headers.Values[Header];
 end;
 
-function ObtemValue(JSON, Value: string): string;
-var
-  LJSONObject: TJSONObject;
-
-  function TrataObjeto(JObj: TJSONObject): string;
-  var
-    i, ASize: Integer;
-    jPar    : TJSONPair;
-  begin
-    Result := '';
-    ASize  := JObj.Count;
-
-    for i := 0 to ASize - 1 do
-    begin
-      jPar := JObj.Pairs[i];
-
-      if jPar.JSONValue is TJSONObject then
-        Result := TrataObjeto((jPar.JSONValue as TJSONObject))
-      else if SameText(Trim(jPar.JSONString.Value), Value) then
-      begin
-        Result := jPar.JSONValue.Value;
-        break;
-      end;
-
-      if not Trim(Result).isEmpty then
-        break;
-    end;
-  end;
-
+function TResource.GetResponseError: string;
 begin
-  LJSONObject := nil;
-  try
-    LJSONObject := TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(JSON), 0) as TJSONObject;
-    Result      := TrataObjeto(LJSONObject);
-  finally
-    LJSONObject.Free;
-  end;
+  Result := FRESTResponse.ErrorMessage;
 end;
 
-procedure TResource.ToDataSet(ADataSet: TDataSet);
+procedure TResource.ToDataSet(ADataSet: TDataSet; APath: string = '');
 var
   vJson: string;
 begin
   vJson := Self.Get();
 
-  JsonToDataset(ADataSet, vJson);
+  JsonToDataset(ADataSet, vJson, APath);
 end;
 
-procedure JsonToDataset(ADataSet: TDataSet; AJSON: string);
+procedure JsonToDataset(ADataSet: TDataSet; AJSON: string; APath: string = '');
 var
   JVl  : TJSONValue;
   JObj : TJSONObject;
   vConv: TCustomJSONDataSetAdapter;
+//  lConv: TJSONDatasetAdapter;
 begin
   if (AJSON = EmptyStr) then
   begin
     exit;
   end;
 
+//  lConv := TJSONDatasetAdapter.Create(nil);
+//  try
+//    lConv.ConvertToDataSet(ADataSet, AJSON, APath);
+//  finally
+//    lConv.Free;
+//  end;
+//  exit;
+
   JVl := TJSONObject.ParseJSONValue(AJSON);
 
   if (JVl is TJSONArray) then
-    JObj := (JVl as TJSONArray).Items[0] as TJSONObject
+    JObj := (JVl as TJSONArray).FindValue(APath) as TJSONObject
   else
     JObj := JVl as TJSONObject;
 
-  vConv := TCustomJSONDataSetAdapter.Create(Nil);
+  if not Trim(APath).IsEmpty and Assigned(JObj.FindValue(APath)) then
+  begin
+    AJSON := JObj.FindValue(APath).ToJSON;
+    JVl   := TJSONObject.ParseJSONValue(AJSON);
+
+    if (JVl is TJSONArray) then
+      JObj := (JVl as TJSONArray).FindValue(APath) as TJSONObject
+    else
+      JObj := JVl as TJSONObject;
+
+    AJSON := JObj.ToJSON;
+  end;
+
+  vConv := TCustomJSONDataSetAdapter.Create(nil);
 
   try
     vConv.Dataset := ADataSet;
@@ -621,10 +893,31 @@ begin
   Result := Self;
 
   if not Trim(Value).isEmpty then
+  if Trim(FRESTClient.BaseURL).Contains(_FIREBASE_DOMAIN_URL) then
   begin
     FSetPretty := True;
     QueryParams('timeout', Value);
-  end;
+  end else
+  if StrToIntDef(Value, 0) > 0 then
+    (Result as TRESTRequest).Timeout := StrToIntDef(Value, 30000);
+end;
+
+{ TRESTResponseHelper }
+
+function TRESTResponseHelper.ContentAsJsonObject: TJSONObject;
+begin
+  Result := TJSONObject.Create;
+
+  if not Trim(Content).isEmpty and not MatchStr(Content, ['', 'null', '{}', '[]']) then
+    Result := StrToJSONObjUTF8(Content);
+end;
+
+function TRESTResponseHelper.ContentAsJsonArray: TJSONArray;
+begin
+  Result := TJSONArray.Create;
+
+  if not Trim(Content).isEmpty and not MatchStr(Content, ['', 'null', '{}', '[]']) then
+    Result := StrToJSONArrayUTF8(Content);
 end;
 
 end.

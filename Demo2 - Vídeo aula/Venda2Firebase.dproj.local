@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2017/02/21 21:28:25.000.868,=C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2017/07/07 12:26:48.000.028,=C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2017/08/06 23:56:45.000.019,=C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2017/08/07 01:42:05.000.178,=C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2017/09/30 16:20:01.000.892,=C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2017/12/11 15:36:55.000.924,=C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2018/03/06 10:04:01.000.557,=C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2018/08/02 00:32:09.000.014,=C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2019/01/19 00:19:11.000.405,=C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2019/03/13 22:30:02.000.356,=C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2020/04/17 14:46:35.000.020,=C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2020/04/17 15:04:01.000.199,=C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2020/04/19 01:04:23.000.590,=C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2020/04/26 20:20:06.000.042,=C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2020/07/01 20:42:03.000.243,=C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2020/07/01 22:57:52.000.080,C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas=C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Video Aula OtsFirebase\FMX\uVenda.pas</Transaction>
+    <Transaction>2020/07/01 22:57:52.000.080,C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.dfm=C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Video Aula OtsFirebase\FMX\uVenda.dfm</Transaction>
+    <Transaction>2020/07/01 22:58:06.000.175,C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Project1.dproj=C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Video Aula OtsFirebase\FMX\Venda2Firebase.dproj</Transaction>
+    <Transaction>2020/07/03 11:44:26.000.577,=C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Video Aula OtsFirebase\FMX\JSON\DataSetConverter4D.Helper.pas</Transaction>
+    <Transaction>2020/07/03 11:44:26.000.675,=C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Video Aula OtsFirebase\FMX\JSON\DataSetConverter4D.Util.pas</Transaction>
+    <Transaction>2020/07/03 11:44:26.000.630,=C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Video Aula OtsFirebase\FMX\JSON\DataSetConverter4D.pas</Transaction>
+    <Transaction>2020/07/03 11:44:26.000.610,=C:\Users\onyxa\OneDrive\Documentos\Embarcadero\Studio\Projects\Video Aula OtsFirebase\FMX\JSON\DataSetConverter4D.Impl.pas</Transaction>
+  </Transactions>
+	<ActiveMobileDevice>
+		<NoProfile Android="42005d83ac2c159b"/>
+	</ActiveMobileDevice>
+</BorlandProject>

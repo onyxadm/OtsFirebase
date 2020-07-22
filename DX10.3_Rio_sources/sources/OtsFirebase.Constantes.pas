@@ -8,7 +8,6 @@ unit OtsFirebase.Constantes;
   Site....: www.onyxsistemas.com
   Licença.: Privada e protegida - © Todos os direitos reservados.
   email...: admin@onyxsistemas.com
-  Fones...: 063 98421-4630 / 99215-6054
 }
 
 interface
@@ -33,6 +32,7 @@ const
   GOOGLE_CREATE_AUTH_URL           = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/createAuthUri';
   TYPE_JSON                        = 'application/json';
 
+  sContentType                = 'Content-Type';
   MediaType_Json              = 'application/json';
   LOCALE_PORTUGUESE_BRAZILIAN = 'pt-BR';
 

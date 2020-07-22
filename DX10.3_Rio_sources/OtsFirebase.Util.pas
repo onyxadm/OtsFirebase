@@ -8,7 +8,6 @@ unit OtsFirebase.Util;
   Site....: www.onyxsistemas.com
   Licença.: Privada e protegida - © Todos os direitos reservados.
   email...: admin@onyxsistemas.com
-  Fones...: 063 98421-4630 / 99215-6054
 }
 
 {$WARN UNSAFE_TYPE OFF}
@@ -42,35 +41,28 @@ uses
     ;
 
 {
-  1.0.1.0
-    -
+  1.0.2.3
+    + Recurses added
+    = Valid datetime token expire
+    + Timeout property
+
+  1.0.2.2
+    + Bearer Token;
+    + Body em Get's;
 
 }
 
 resourcestring
   _FBusiness = 'ONYX Sistemas';
   _FEmail = 'suporte@onyxsistemas.com';
-  _FSite = 'http://www.onyxsistemas.com';
+  _FSite = 'https://www.onyxsistemas.com';
 
 const
   sAPI_DEVELOPER = '© ONYX Sistemas ';
-  sVERSION_BUILD = '1.0.2.1 ';
-  sLAST_MODIFY   = '24/01/2019';
+  sVERSION_BUILD = '1.0.2.3 ';
+  sLAST_MODIFY   = '23/06/2020';
 
 type
-
-  // {$IFDEF RTL230_UP}
-  // [ComponentPlatformsAttribute(pidWin32 or pidWin64 or pidAndroid)]
-  // {$ENDIF RTL230_UP}
-  //
-  // TOtsFirebaseEditor = class(TComponentEditor)
-  // public
-  // procedure Edit; override;
-  // procedure ExecuteVerb(Index: Integer); override;
-  // function GetVerb(Index: Integer): string; override;
-  // function GetVerbCount: Integer; override;
-  // end;
-
   {$IFDEF RTL230_UP}
   [ComponentPlatformsAttribute(pidWin32 or pidWin64 or pidAndroid)]
   {$ENDIF RTL230_UP}
@@ -110,7 +102,6 @@ type
 
   THelperJSON = class helper for TJSONString
   public
-    function S(AName: string): string;
     procedure ToDataset(ADataSet: TDataSet);
   end;
 
@@ -137,39 +128,16 @@ begin
   {$ENDIF}
 end;
 
-{ TOtsFirebaseEditor }
-
-// procedure TOtsFirebaseEditor.Edit;
-// begin
-// AboutDialog('');
-// end;
-//
-// procedure TOtsFirebaseEditor.ExecuteVerb(Index: Integer);
-// begin
-// Edit;
-// end;
-//
-// function TOtsFirebaseEditor.GetVerb(Index: Integer): string;
-// begin
-// Result := sAPI_DEVELOPER + '- ' + _FSite;
-// end;
-//
-// function TOtsFirebaseEditor.GetVerbCount: Integer;
-// begin
-// Result := 1;
-// end;
-
 procedure Register;
 begin
   RegisterComponents(_FBusiness, [TOtsFirebase]);
-  // RegisterComponentEditor(TOtsFirebase, TOtsFirebaseEditor);
 end;
 
 { TOtsFirebase }
 
 constructor TOtsFirebase.Create(AOwner: TComponent);
 const
-  bShareware: string = 'OnyxSistemas';
+  bShareware: string = 'Registered';
 begin
   inherited Create(AOwner);
 
@@ -204,7 +172,7 @@ begin
   Result := Self;
 end;
 
-function TOtsFirebase.Logout: TOtsFirebase;
+function TOtsFirebase.Logout(): TOtsFirebase;
 begin
   FAuth.Logout(FAuth);
   Result := Self;
@@ -275,15 +243,18 @@ end;
 
 function TOtsFirebase.Request(ABaseUrl: string = ''; AToken: string = ''): TResource;
 begin
-  Result := FAuth.Database(ABaseUrl).Token(AToken);
+//  Result := FAuth.Database(ABaseUrl).Token(AToken, Simple);
+
+  Result := FReqResource;
+
+  if not Trim(ABaseUrl).IsEmpty then
+    Result.SetUrl(ABaseUrl);
+
+  if not Trim(AToken).IsEmpty then
+    Result.Token(AToken, Simple);
 end;
 
 { THelperJSON }
-
-function THelperJSON.S(AName: string): string;
-begin
-  Result := ObtemValue(Self.ToString, AName);
-end;
 
 procedure THelperJSON.ToDataset(ADataSet: TDataSet);
 begin
