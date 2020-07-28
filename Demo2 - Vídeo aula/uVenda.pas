@@ -44,7 +44,7 @@ uses
   cxClasses,
   cxGridCustomView,
   cxGrid,
-  Vcl.ExtCtrls, cxCurrencyEdit, System.JSON;
+  Vcl.ExtCtrls, cxCurrencyEdit, System.JSON, System.StrUtils, Vcl.DBCtrls;
 
 type
   TfrmVenda = class(TForm)
@@ -60,7 +60,7 @@ type
     cxGridDBTableView2: TcxGridDBTableView;
     cxGridLevel2: TcxGridLevel;
     bGerar: TButton;
-    bCancelar: TButton;
+    bGerarTodas: TButton;
     Conexao: TUniConnection;
     Provider: TInterBaseUniProvider;
     Produtos: TUniQuery;
@@ -104,6 +104,7 @@ type
     mVenda: TMemo;
     mJson: TMemo;
     Splitter2: TSplitter;
+    DBText1: TDBText;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure ConexaoAfterConnect(Sender: TObject);
@@ -114,6 +115,7 @@ type
     procedure PgtoAfterPost(DataSet: TDataSet);
     procedure bGerarClick(Sender: TObject);
   private
+    function getJsonVenda(Sender: TDataSet): TJSONObject;
     { Private declarations }
   public
     { Public declarations }
@@ -126,26 +128,57 @@ implementation
 
 {$R *.dfm}
 
-uses DataSetConverter4D.Helper;
+uses DataSetConverter4D.Helper,
+     OtsFirebase.Integration;
 
-procedure TfrmVenda.bGerarClick(Sender: TObject);
+function TfrmVenda.getJsonVenda(Sender: TDataSet): TJSONObject;
 var
   JsonVenda: TJSONObject;
   JsonItems: TJSONArray;
   JsonPgtos: TJSONArray;
 begin
-  JsonVenda := venda.AsJSONObject;
-  JsonItems := item.AsJSONArray;
-  JsonPgtos := Pgto.AsJSONArray;
+  Result := TJSONObject.Create;
+  try
+    JsonVenda := TDataSet(Sender).AsJSONObject;
+    JsonItems := item.AsJSONArray;
+    JsonPgtos := Pgto.AsJSONArray;
 
-  JsonVenda.AddPair(TJSONPair.Create('itens', JsonItems));
-  JsonVenda.AddPair(TJSONPair.Create('pgtos', JsonPgtos));
+    JsonVenda.AddPair(TJSONPair.Create('itens', JsonItems));
+    JsonVenda.AddPair(TJSONPair.Create('pgtos', JsonPgtos));
 
-  mVenda.Text := JsonVenda.ToJSON;
+    Result := JsonVenda;
+  except
+    on E: Exception do
+    begin
+      ShowMessage(E.Message);
+    end;
+  end;
+end;
 
-(*
-    {"venda": .... {"itens": [{}, {}]}, {"pagamentos": [{}, {}]}}
-*)
+procedure TfrmVenda.bGerarClick(Sender: TObject);
+var
+  JsonObj: TJSONObject;
+  WebId: string;
+begin
+  JsonObj := Firebase('AIzaSyBWa6TRsrLUxm6N4gc4UVRxD1qq29Qk-hs', 'vendas2firebase-delphi')
+                     .Auth('otsfirebase@gmail.com', 'onyx123456')
+                     .Database()
+                     .Resource(['vendas'])
+                     .AutoIncremento()
+                     .Post(getJsonVenda(Venda), WebId);
+
+  if Assigned(JsonObj) and not MatchStr(Trim(JsonObj.ToString), ['', '[]', '{}', 'null']) then
+  begin
+    mVenda.Text := JsonObj.ToJSON;
+
+    WebId := JsonObj.GetValue<string>('name');
+
+    mVenda.Lines.Add(WebId);
+
+    Venda.Edit;
+    Venda.FieldByName('WEB_ID').AsString := WebId;
+    Venda.Post;
+  end;
 end;
 
 procedure TfrmVenda.ConexaoAfterConnect(Sender: TObject);

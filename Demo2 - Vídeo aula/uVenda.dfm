@@ -42,9 +42,17 @@ object frmVenda: TfrmVenda
     ParentBackground = False
     ParentFont = False
     TabOrder = 0
-    ExplicitLeft = 8
-    ExplicitTop = 8
-    ExplicitWidth = 449
+    object DBText1: TDBText
+      AlignWithMargins = True
+      Left = 1224
+      Top = 10
+      Width = 315
+      Height = 28
+      Margins.Top = 10
+      Align = alRight
+      DataField = 'WEB_ID'
+      DataSource = dsVenda
+    end
   end
   object pControls: TPanel
     Left = 0
@@ -53,9 +61,6 @@ object frmVenda: TfrmVenda
     Height = 41
     Align = alBottom
     TabOrder = 1
-    ExplicitLeft = 160
-    ExplicitTop = 184
-    ExplicitWidth = 185
     object bGerar: TButton
       Left = 395
       Top = 8
@@ -65,12 +70,12 @@ object frmVenda: TfrmVenda
       TabOrder = 0
       OnClick = bGerarClick
     end
-    object bCancelar: TButton
+    object bGerarTodas: TButton
       Left = 476
       Top = 8
-      Width = 75
+      Width = 125
       Height = 25
-      Caption = 'Cancelar'
+      Caption = 'Gerar JSON Todas'
       TabOrder = 1
     end
   end
@@ -91,9 +96,6 @@ object frmVenda: TfrmVenda
       Margins.Bottom = 10
       Align = alTop
       TabOrder = 0
-      ExplicitLeft = 3
-      ExplicitTop = 51
-      ExplicitWidth = 941
       object gridVendaDBTableView1: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         Navigator.Buttons.First.Visible = False
@@ -265,10 +267,6 @@ object frmVenda: TfrmVenda
       Margins.Bottom = 10
       Align = alClient
       TabOrder = 1
-      ExplicitLeft = 3
-      ExplicitTop = 51
-      ExplicitWidth = 941
-      ExplicitHeight = 425
       object cxGridDBTableView1: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         Navigator.Buttons.First.Visible = False
@@ -436,9 +434,6 @@ object frmVenda: TfrmVenda
       Margins.Bottom = 10
       Align = alBottom
       TabOrder = 2
-      ExplicitLeft = 3
-      ExplicitTop = 496
-      ExplicitWidth = 941
       object cxGridDBTableView2: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         Navigator.Buttons.First.Visible = False
@@ -533,10 +528,6 @@ object frmVenda: TfrmVenda
     Height = 609
     Align = alClient
     TabOrder = 3
-    ExplicitLeft = 688
-    ExplicitTop = 344
-    ExplicitWidth = 185
-    ExplicitHeight = 41
     object Splitter2: TSplitter
       Left = 1
       Top = 289
