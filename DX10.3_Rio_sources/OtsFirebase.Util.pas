@@ -60,7 +60,7 @@ resourcestring
 const
   sAPI_DEVELOPER = '© ONYX Sistemas ';
   sVERSION_BUILD = '1.0.2.3 ';
-  sLAST_MODIFY   = '23/06/2020';
+  sLAST_MODIFY   = '05/08/2021';
 
 type
   {$IFDEF RTL230_UP}
